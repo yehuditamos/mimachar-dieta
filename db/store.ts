@@ -1,0 +1,5 @@
+export type Member={uid:string;name:string;vote:number|null;goal:number|null;goalDays:number|null;steps:number;workouts:number;ready:boolean};
+export type Group={name:string;owner:string;members:Member[];start:string|null;days:number|null};
+export type Row={id:string;invite:string;state:string;revision:number};
+export function consensus(g:Group){const d=g.members[0]?.vote;return g.members.length===4&&d&&g.members.every(m=>m.vote===d)?d:null;}
+export function projection(r:Row,uid:string){const g:Group=JSON.parse(r.state);const me=g.members.find(m=>m.uid===uid);if(!me)return null;const days=consensus(g);return {revision:r.revision,id:r.id,invite:r.invite,name:g.name,isOwner:g.owner===uid,start:g.start,days:g.days||days,consensus:days,me:{name:me.name,vote:me.vote,goal:me.goal,goalDays:me.goalDays,steps:me.steps,workouts:me.workouts,ready:me.ready&&me.goalDays===days},members:g.members.map((m,i)=>({id:i,name:m.name,isMe:m.uid===uid,isOwner:m.uid===g.owner,vote:m.vote,ready:m.ready&&m.goalDays===days})),canStart:!!days&&g.members.every(m=>m.ready&&m.goalDays===days),groupGoal:100};}

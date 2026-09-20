@@ -1,0 +1,15 @@
+.git
+.env*
+!.env.example
+node_modules
+.next
+.sites-runtime
+.wrangler
+dist
+build
+examples
+drizzle
+scripts/install-*
+scripts/sites-*
+vite.config.ts
+cloudflare-env.d.ts
